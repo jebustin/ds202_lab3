@@ -7,7 +7,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-at <- readxl::read_xls("GSS.xls")
+df <- readxl::read_xls("GSS.xls")
+```
+
+Data Cleaning:
+```{r}
+
 ```
 
 ## 1
