@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 df <- readxl::read_xls("GSS.xls")
 if (!require("ggplot2")) {
   install.packages("ggplot2")
+}
+if (!require("dplyr")) {
   install.packages("dplyr")
 }
 
@@ -23,6 +25,7 @@ Data Cleaning:
 3.Dropped Na values for num col (Year and ID only)
 4.Dropped any rows containing "No answer" or "Don't know" or "Dk na".
 5.I didn't remove any "Not applicable" rows
+6.The NumOfChildren and YearHSCompleted columns were cast to numeric
 ```{r}
 GSS = rename(df, "Year"='Gss year for this respondent',
              "Pol_Affl"="Political party affiliation",
@@ -60,7 +63,7 @@ ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
 Does the sex of the respondent affect the relationship you found in Q1?
 
 ```{r}
- Q2<-df1 %>%
+ Q2<-GSS %>%
   select(MaritalStatus, HappyIndex, Sex)
 ```
 

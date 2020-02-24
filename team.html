@@ -369,7 +369,7 @@ summary {
 </div>
 
 
-<p>Data Cleaning: 1.To being with with cleaning I used “dplyr” in R. 2.ColNames changed for easier referencing. 3.Dropped Na values for num col (Year and ID only) 4.Dropped any rows containing “No answer” or “Don’t know” or “Dk na”. 5.I didn’t remove any “Not applicable” rows</p>
+<p>Data Cleaning: 1.To being with with cleaning I used “dplyr” in R. 2.ColNames changed for easier referencing. 3.Dropped Na values for num col (Year and ID only) 4.Dropped any rows containing “No answer” or “Don’t know” or “Dk na”. 5.I didn’t remove any “Not applicable” rows 6.The NumOfChildren and YearHSCompleted columns were cast to numeric</p>
 <pre class="r"><code>GSS = rename(df, &quot;Year&quot;=&#39;Gss year for this respondent&#39;,
              &quot;Pol_Affl&quot;=&quot;Political party affiliation&quot;,
              &quot;Race&quot;=&quot;Race of respondent&quot;,
@@ -393,7 +393,7 @@ GSS = transform(GSS, NumOfChildren = as.numeric(NumOfChildren))</code></pre>
 ## by coercion</code></pre>
 <div id="section" class="section level2">
 <h2>1</h2>
-<p>How does the happiness of a respondent relate to the marriage status?</p>
+<p>How does the happiness of a respondent relate to the marriage status? The bar plot below shows that people are genrally more happier while they’re married. So are people who’ve ne’er married. But they’re people who only are pretty happy not VERY happy, being divorced.</p>
 <pre class="r"><code>Q1&lt;-GSS %&gt;%
   select(MaritalStatus, HappyIndex)
 ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()</code></pre>
@@ -402,6 +402,8 @@ ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()</code></pre>
 <div id="section-1" class="section level2">
 <h2>2</h2>
 <p>Does the sex of the respondent affect the relationship you found in Q1?</p>
+<pre class="r"><code> Q2&lt;-GSS %&gt;%
+  select(MaritalStatus, HappyIndex, Sex)</code></pre>
 </div>
 <div id="section-2" class="section level2">
 <h2>3</h2>
