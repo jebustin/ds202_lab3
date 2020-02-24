@@ -14,9 +14,13 @@ if (!require("ggplot2")) {
 if (!require("dplyr")) {
   install.packages("dplyr")
 }
+if (!require("ggmosaic")) {
+  install.packages("ggmosaic")
+}
 
 library("dplyr")
 library("ggplot2")
+library("ggmosaic")
 ```
 
 Data Cleaning:
@@ -96,6 +100,7 @@ school the respondent completed? Does this relationship change for
 for men and women?
 
 ```{r}
+GSS$respondentSpouse_TopEdu <- factor(GSS$respondentSpouse_TopEdu, levels = c("Lt high school", "High school", "Junior college", "Bachelor", "Graduate", "Not Applicable"))
 ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) + geom_boxplot()
 
 ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
@@ -107,7 +112,11 @@ ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
 the highest degree of the respondent?
 
 ```{r}
+GSS$Respondent_TopEdu <- factor(GSS$Respondent_TopEdu, levels = c("Lt high school", "High school", "Junior college", "Bachelor", "Graduate", "Not Applicable"))
+GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat", "Not str democrat", "Ind,near dem", "Strong republican", "Not str republican", "Ind,near rep", "Independent", "Other party", "Don't know"))
 
+ggplot(data = GSS) +
+   geom_mosaic(aes(x = product(Pol_Affl, Respondent_TopEdu), fill = Pol_Affl), na.rm=FALSE)
 ```
 
 4. Is there a relationship between happiness and number of hours
@@ -115,5 +124,5 @@ usually worked in a week?  Does this conclusion hold true for both
 men and women?
 
 ```{r}
-
+ggplot(data = GSS, aes(x = HappyIndex, y = HoursWorked))
 ```
