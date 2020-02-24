@@ -46,6 +46,7 @@ GSS = transform(GSS, YearHSCompleted = as.numeric(YearHSCompleted))
 ## 1
 
 How does the happiness of a respondent relate to the marriage status?
+The bar plot below shows that people are genrally more happier while they're married. So are people who've ne'er married. But they're people who only are pretty happy not VERY happy, being divorced.
 
 ```{r}
 Q1<-GSS %>%
@@ -59,7 +60,8 @@ ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
 Does the sex of the respondent affect the relationship you found in Q1?
 
 ```{r}
-
+ Q2<-df1 %>%
+  select(MaritalStatus, HappyIndex, Sex)
 ```
 
 ## 3
