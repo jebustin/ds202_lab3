@@ -8,11 +8,35 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 df <- readxl::read_xls("GSS.xls")
+install.packages("dplyr")
+install.packages("ggplot2")
+library("dplyr")
+df
 ```
 
 Data Cleaning:
+1.To being with with cleaning I used "dplyr" in R. 
+2.ColNames changed for easier referencing. 
+3.Dropped Na values for num col (Year and ID only)
+4.Dropped any rows containing "No answer" or "Don't know" or "Dk na".
+5.I didn't remove any "Not applicable" rows
 ```{r}
-
+df1 = rename(df, "Year"='Gss year for this respondent',
+             "Pol_Affl"="Political party affiliation",
+             "Race"="Race of respondent",
+             "Sex"="Respondents sex",
+             "respondentSpouse_TopEdu"="Spouses highest degree",
+             "Respondent_TopEdu"="Rs highest degree",
+             "YearHSCompleted"="Highest year of school completed",
+             "NumOfChildren"="Number of children",
+             "WidowStatus"="Ever been widowed",
+             "MaritalStatus"="Marital status", 
+             "HoursWorked"="Number of hours usually work a week",
+             "ID"="Respondent id number",
+             "HappyIndex"="General happiness")
+df1<-na.omit(df1)
+df1<-df1[!(df1$Pol_Affl=="No answer" | df1$respondentSpouse_TopEdu=="No answer" | df1$respondentSpouse_TopEdu=="Don't know" | df1$Respondent_TopEdu=="No answer" | df1$YearHSCompleted=="No answer" | df1$NumOfChildren=="Dk na" | df1$WidowStatus=="No answer" | df1$WidowStatus=="Don't know" | df1$MaritalStatus=="No answer" | df1$HoursWorked=="No answer" | df1$HoursWorked=="Don't know" | df1$HappyIndex=="No answer" | df1$HappyIndex=="Not applicable"),]
+df1
 ```
 
 ## 1
@@ -20,7 +44,11 @@ Data Cleaning:
 How does the happiness of a respondent relate to the marriage status?
 
 ```{r}
-
+library("ggplot2")
+  Q1<-df1 %>%
+  select(MaritalStatus, HappyIndex)
+Q1
+ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
 ```
 
 
