@@ -8,10 +8,13 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 df <- readxl::read_xls("GSS.xls")
-install.packages("dplyr")
-install.packages("ggplot2")
+if (!require("ggplot2")) {
+  install.packages("ggplot2")
+  install.packages("dplyr")
+}
+
 library("dplyr")
-df
+library("ggplot2")
 ```
 
 Data Cleaning:
@@ -21,7 +24,7 @@ Data Cleaning:
 4.Dropped any rows containing "No answer" or "Don't know" or "Dk na".
 5.I didn't remove any "Not applicable" rows
 ```{r}
-df1 = rename(df, "Year"='Gss year for this respondent',
+GSS = rename(df, "Year"='Gss year for this respondent',
              "Pol_Affl"="Political party affiliation",
              "Race"="Race of respondent",
              "Sex"="Respondents sex",
@@ -34,9 +37,10 @@ df1 = rename(df, "Year"='Gss year for this respondent',
              "HoursWorked"="Number of hours usually work a week",
              "ID"="Respondent id number",
              "HappyIndex"="General happiness")
-df1<-na.omit(df1)
-df1<-df1[!(df1$Pol_Affl=="No answer" | df1$respondentSpouse_TopEdu=="No answer" | df1$respondentSpouse_TopEdu=="Don't know" | df1$Respondent_TopEdu=="No answer" | df1$YearHSCompleted=="No answer" | df1$NumOfChildren=="Dk na" | df1$WidowStatus=="No answer" | df1$WidowStatus=="Don't know" | df1$MaritalStatus=="No answer" | df1$HoursWorked=="No answer" | df1$HoursWorked=="Don't know" | df1$HappyIndex=="No answer" | df1$HappyIndex=="Not applicable"),]
-df1
+GSS<-na.omit(GSS)
+GSS<-GSS[!(GSS$Pol_Affl=="No answer" | GSS$respondentSpouse_TopEdu=="No answer" | GSS$respondentSpouse_TopEdu=="Don't know" | GSS$Respondent_TopEdu=="No answer" | GSS$YearHSCompleted=="No answer"  | GSS$NumOfChildren=="Dk na" | GSS$WidowStatus=="No answer" | GSS$WidowStatus=="Don't know" | GSS$MaritalStatus=="No answer" | GSS$HoursWorked=="No answer" | GSS$HoursWorked=="Don't know" | GSS$HappyIndex=="No answer" | GSS$HappyIndex=="Not applicable"),]
+GSS = transform(GSS, NumOfChildren = as.numeric(NumOfChildren))
+GSS = transform(GSS, YearHSCompleted = as.numeric(YearHSCompleted))
 ```
 
 ## 1
@@ -44,10 +48,8 @@ df1
 How does the happiness of a respondent relate to the marriage status?
 
 ```{r}
-library("ggplot2")
-  Q1<-df1 %>%
+Q1<-GSS %>%
   select(MaritalStatus, HappyIndex)
-Q1
 ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
 ```
 
@@ -77,6 +79,11 @@ Does this relationship change over the years?
 
 ```{r}
 
+ggplot(GSS, aes(x = Race, y = NumOfChildren)) + geom_boxplot()
+
+ggplot(GSS, aes(x = Race, y = NumOfChildren)) +
+  facet_wrap(~Year) +
+  geom_boxplot()
 ```
 
 2. Does the respondents spouse's highest degree affect the years of
@@ -84,7 +91,11 @@ school the respondent completed? Does this relationship change for
 for men and women?
 
 ```{r}
+ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) + geom_boxplot()
 
+ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
+  facet_wrap(~Sex) +
+  geom_boxplot()
 ```
 
 3. Does the distribution between political parties change based on
