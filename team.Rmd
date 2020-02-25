@@ -59,9 +59,9 @@ The bar plot below shows that people are genrally more happy while they're marri
 Q1<-GSS %>%
   select(MaritalStatus, HappyIndex)
 
-ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
+ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()+ggtitle("Does Marital Status affect Individual Happiness?")
 
-ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")
+ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")+ggtitle("Does Marital Status affect Individual Happiness?")
 ```
 
 
@@ -75,7 +75,7 @@ The graph below shows that happiness level accross all kinds of marital status i
  Q2<-GSS %>%
   select(MaritalStatus, HappyIndex, Sex)
 
-ggplot(data=Q2,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill") + facet_wrap(~Sex)
+ggplot(data=Q2,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill") + facet_wrap(~Sex)+ggtitle("Do different genders have different happiness levels in regards to their Marital Status?")
 ```
 
 ## 3
@@ -94,9 +94,9 @@ GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat", "Not str demo
 
 counts <- GSS %>% group_by(HappyIndex, Pol_Affl) %>% summarise(counts = n()) 
 
-ggplot(data = counts, aes(x = HappyIndex, y = counts, fill = Pol_Affl)) + geom_bar(stat = "identity", position = position_dodge())
+ggplot(data = counts, aes(x = HappyIndex, y = counts, fill = Pol_Affl)) + geom_bar(stat = "identity", position = position_dodge())+ggtitle("Does Political Party support affect personal happines?")
 
-ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) + geom_bar(position = "fill")
+ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) + geom_bar(position = "fill")+ggtitle("Does Political Party support affect personal happines?")
 ```
 
 ## 4
