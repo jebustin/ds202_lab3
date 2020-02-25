@@ -24,7 +24,7 @@ library("ggmosaic")
 ```
 
 Data Cleaning:
-1.To being with with cleaning I used "dplyr" in R. 
+1.To clean the data I used "dplyr." 
 2.ColNames changed for easier referencing. 
 3.Dropped Na values for num col (Year and ID only)
 4.Dropped any rows containing "No answer" or "Don't know" or "Dk na".
@@ -53,15 +53,23 @@ GSS = transform(GSS, YearHSCompleted = as.numeric(YearHSCompleted))
 
 How does the happiness of a respondent relate to the marriage status?
 
-The bar plot below shows that people are genrally more happy while they're married. So are people who've never married. But they are only pretty happy not VERY happy, being divorced.
+The bar plot below shows that people are genrally more happy while they're married. So are people who've never married. A larger portion of people are not very happy when they are seperated and the smallest portion of not very happy respondents are married.
 
 ```{r}
 Q1<-GSS %>%
   select(MaritalStatus, HappyIndex)
 
-ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()+ggtitle("Does Marital Status affect Individual Happiness?")
+ggplot(data = Q1, aes(x = MaritalStatus, fill = HappyIndex)) +
+  geom_bar() + 
+  ggtitle("Happiness by Marital Status") + 
+  xlab("Marital Status") + 
+  ylab("Count")
 
-ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")+ggtitle("Does Marital Status affect Individual Happiness?")
+ggplot(data = Q1, aes(x = MaritalStatus, fill = HappyIndex)) +
+  geom_bar(position = "fill") + 
+  ggtitle("Happiness by Marital Status") + 
+  xlab("Marital Status") + 
+  ylab("Proportion")
 ```
 
 
@@ -69,34 +77,52 @@ ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")
 
 Does the sex of the respondent affect the relationship you found in Q1?
 
-The graph below shows that happiness level accross all kinds of marital status is the same. This could be due to the fact that these relationship decision are usually mutual or we have bad data. 
+The graph below shows that happiness level proportions accross all categories of marital status is roughly the same between the sexes. This means that the influence of marital status on happiness is the same for men and women. 
 
 ```{r}
- Q2<-GSS %>%
+Q2<-GSS %>%
   select(MaritalStatus, HappyIndex, Sex)
 
-ggplot(data=Q2,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill") + facet_wrap(~Sex)+ggtitle("Do different genders have different happiness levels in regards to their Marital Status?")
+ggplot(data = Q2, aes(x = MaritalStatus, fill = HappyIndex)) +
+  geom_bar(position = "fill") + 
+  facet_wrap(~Sex) + 
+  ggtitle("Happiness by Marital Status Between the Sexes") +
+  xlab("Marital Status") +
+  ylab("Proportion")
 ```
 
 ## 3
 
 How does the happiness of a respondent relate to the political party affiliation?
 
-People who’re the most happiest are “not strong democrats” and “not strong republicans”.
+People who are the most happy are “not strong democrats” and “not strong republicans”.
 
-But interestingly some of the people who consider themselves as “not strong democrats” aren’t very happy but the  same can’t be said for the republican supporter.
+But interestingly, some of the people who consider themselves as “not strong democrats” aren’t very happy but the  same can’t be said for the republican supporter.
 
-People who’re clueless about their happiness are majority of independent party supporters
+People who are clueless about their happiness are mostly independent party supporters.
 
 
 ```{r}
-GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat", "Not str democrat", "Ind,near dem", "Strong republican", "Not str republican", "Ind,near rep", "Independent", "Other party", "Don't know"))
+GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat",
+    "Not str democrat", "Ind,near dem", "Strong republican", "Not st
+    republican", "Ind,near rep", "Independent", "Other party", "Don't
+    know"))
 
-counts <- GSS %>% group_by(HappyIndex, Pol_Affl) %>% summarise(counts = n()) 
+counts <- GSS %>% group_by(HappyIndex, Pol_Affl) %>% 
+          summarise(counts = n()) 
 
-ggplot(data = counts, aes(x = HappyIndex, y = counts, fill = Pol_Affl)) + geom_bar(stat = "identity", position = position_dodge())+ggtitle("Does Political Party support affect personal happines?")
+ggplot(data = counts, aes(x = HappyIndex, y = counts, 
+                          fill = Pol_Affl)) + 
+  geom_bar(stat = "identity", position = position_dodge()) +
+  ggtitle("Political Party by Happiness Level") + 
+  xlab("Happiness Level") + 
+  ylab("Count")
 
-ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) + geom_bar(position = "fill")+ggtitle("Does Political Party support affect personal happines?")
+ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) +
+  geom_bar(position = "fill") + 
+  ggtitle("Political Party by Happiness Level") + 
+  xlab("Happiness Level") + ylab("Proportion")
+
 ```
 
 ## 4
@@ -108,9 +134,18 @@ Raise four questions that can be answered by the GSS dataset. Extract appropriat
 It does appear that it is more likely for blacks to have more children overall.  Year in and year out this tends to vary a little though.  Whether this is a normal level of variance within the sample from year to year is something to be ascertained with further analysis.  Using regression, it would be interesting to find out if race and year are significant factors in predicting the number of chlidren.  While looking at the data by year, it is interesting to see which time periods see an increase in respondents with 0 children accross the races such as recently or the early 80's.  Perhaps economic and social instability influence these changes.
 
 ```{r}
-ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) + geom_bar(position = "fill")
+ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) +
+  geom_bar(position = "fill") + 
+  ggtitle("Number of Children by Race") + 
+  xlab("Race") + 
+  ylab("Proportion")
 
-ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) + geom_bar(position = "fill") + facet_wrap(~Year)
+ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) +
+  geom_bar(position = "fill") + 
+  facet_wrap(~Year) + 
+  ggtitle("Number of Children by Race Accross the Years") +
+  xlab("Race") + 
+  ylab("Proportion")
 
 ```
 
@@ -126,11 +161,18 @@ GSS$respondentSpouse_TopEdu <- factor(GSS$respondentSpouse_TopEdu,
                "Bachelor", "Graduate", "Not Applicable"))
 
 ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
-  geom_boxplot()
+  geom_boxplot() + 
+  ggtitle("Years of Education by Spouse's Highest Degree") +
+  xlab("Spouse's Highest Degree") + 
+  ylab("Respondent's Years of Education Completed")
 
 ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
-  facet_wrap(~Sex) +
-  geom_boxplot()
+  facet_wrap(~Sex) + 
+  geom_boxplot() + 
+  ggtitle("Years of Education by Spouse's Highest Degree Accross the
+    Sexes") + 
+  xlab("Spouse's Highest Degree") + 
+  ylab("Respondent's Years of Education Completed")
 ```
 
 3. Does the distribution between political parties change based on
@@ -146,14 +188,22 @@ GSS$Respondent_TopEdu <- factor(GSS$Respondent_TopEdu,
                "Bachelor", "Graduate", "Not Applicable"))
 
 ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) +
-  geom_bar(position = "fill")
+  geom_bar(position = "fill") + 
+  ggtitle("Party Affiliation by Highest Degree") + 
+  xlab("Respondent's Highest Degree") +
+  ylab("Proportion")
 
-ggplot(data = GSS) +
-   geom_mosaic(aes(x = product(Pol_Affl, Respondent_TopEdu), 
-                   fill = Pol_Affl), na.rm=FALSE)
+ggplot(data = GSS) + geom_mosaic(aes(x = product(Pol_Affl,
+  Respondent_TopEdu), fill = Pol_Affl), na.rm=FALSE) +
+  ggtitle("Mosaic Plot for Political Party and Degree") +
+  xlab("Respondent's Highest Degree") + ylab("Political Party")
 
 ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) +
-  geom_bar(position = "fill") + facet_wrap(~Race)
+  geom_bar(position = "fill") + 
+  facet_wrap(~Race) + 
+  ggtitle("Party Affiliation by Highest Degree") + 
+  xlab("Respondent's Highest Degree") + 
+  ylab("Proportion")
 ```
 
 4. Is there a relationship between happiness and number of children?  Does this conclusion hold true for both men and women?
@@ -163,10 +213,16 @@ on the other hand appear to be more likely to be very happy as they have more ch
 
 ```{r}
 ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) + 
-  geom_bar(position = "fill")
+  geom_bar(position = "fill") +
+  ggtitle("Happiness Level by Number of Children") + 
+  xlab("Number of Children") +
+  ylab("Proportion")
 
 ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) +
   facet_wrap(~Sex) +
-  geom_bar(position = "fill")
+  geom_bar(position = "fill") + 
+  ggtitle("Happiness Level by Number of Children and Sex") + 
+  xlab("Number of Children") +
+  ylab("Proportion")
 
 ```
