@@ -69,6 +69,8 @@ ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")
 
 Does the sex of the respondent affect the relationship you found in Q1?
 
+The graph below shows that happiness level accross all kinds of marital status is the same. This could be due to the fact that these relationship decision are usually mutual or we have bad data. 
+
 ```{r}
  Q2<-GSS %>%
   select(MaritalStatus, HappyIndex, Sex)
@@ -79,6 +81,13 @@ ggplot(data=Q2,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")
 ## 3
 
 How does the happiness of a respondent relate to the political party affiliation?
+
+People who’re the most happiest are “not strong democrats” and “not strong republicans”.
+
+But interestingly some of the people who consider themselves as “not strong democrats” aren’t very happy but the  same can’t be said for the republican supporter.
+
+People who’re clueless about their happiness are majority of independent party supporters
+
 
 ```{r}
 GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat", "Not str democrat", "Ind,near dem", "Strong republican", "Not str republican", "Ind,near rep", "Independent", "Other party", "Don't know"))
