@@ -58,6 +58,9 @@ The bar plot below shows that people are genrally more happy while they're marri
 ```{r}
 Q1<-GSS %>%
   select(MaritalStatus, HappyIndex)
+
+ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
+
 ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")
 ```
 
