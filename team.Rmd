@@ -94,8 +94,9 @@ ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) + geom_bar(position = "
 
 Raise four questions that can be answered by the GSS dataset. Extract appropriate data from the website, explore, and answer the questions.
 
-1. Does the number of children the respondent have vary with race?
-Does this relationship change over the years?
+1. Does the number of children the respondent have vary with race?  How about by race and over time?
+
+It does appear that it is more likely for blacks to have more children overall.  Year in and year out this tends to vary a little though.  Whether this is a normal level of variance within the sample from year to year is something to be ascertained with further analysis.  Using regression, it would be interesting to find out if race and year are significant factors in predicting the number of chlidren.  While looking at the data by year, it is interesting to see which time periods see an increase in respondents with 0 children accross the races such as recently or the early 80's.  Perhaps economic and social instability influence these changes.
 
 ```{r}
 ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) + geom_bar(position = "fill")
@@ -104,13 +105,19 @@ ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) + geom_bar(position = "f
 
 ```
 
-2. Does the respondents spouse's highest degree affect the years of
+2. Does the respondent's spouse's highest degree affect the years of
 school the respondent completed? Does this relationship change for
 for men and women?
 
+As the highest degree that a spouse recieved increases, the mean number of years of school completed by the respondent also increases.  The spread of these means changes between females and males as well.  For example, if a spouse has not received a high school degree then for males the average number of years of school completed is lower than for females.  The inverse is then true on the other end where the spouse has a graduate degree, translating to a higher mean number of years of education for males than females.  
+
 ```{r}
-GSS$respondentSpouse_TopEdu <- factor(GSS$respondentSpouse_TopEdu, levels = c("Lt high school", "High school", "Junior college", "Bachelor", "Graduate", "Not Applicable"))
-ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) + geom_boxplot()
+GSS$respondentSpouse_TopEdu <- factor(GSS$respondentSpouse_TopEdu,
+    levels = c("Lt high school", "High school", "Junior college",
+               "Bachelor", "Graduate", "Not Applicable"))
+
+ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
+  geom_boxplot()
 
 ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
   facet_wrap(~Sex) +
@@ -120,24 +127,37 @@ ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
 3. Does the distribution between political parties change based on
 the highest degree of the respondent? Does this relationship change between races?
 
-```{r}
-GSS$Respondent_TopEdu <- factor(GSS$Respondent_TopEdu, levels = c("Lt high school", "High school", "Junior college", "Bachelor", "Graduate", "Not Applicable"))
+Yes, it definitly does!  People become more decisive as their highest degree increases as they are less likely to be independent.  People that did not finish high school and those with graduate degrees also are more likely to be liberal than those with a high school, jr college, or bachelors degree.  Those with only a bachelors degree are more likely to be conservative over the other degree levels.  This variability does change between the races. First off, blacks are overall much more likely to be a strong democrat than whites or other.  Also though, this doesn't change with the education level for blacks while it does for whites and those in the other category. Accross the races it holds true that the chance of being an independent goes down as the highest degree level goes up.
 
-ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) + geom_bar(position = "fill")
+While looking at these it was also interesting to see the mosiac plot.  While this plot is a little more difficult to read I think it is a good reminder of what proportion of the study has each highest degree level.  Predominitly the highest degree level is high school.
+
+```{r}
+GSS$Respondent_TopEdu <- factor(GSS$Respondent_TopEdu, 
+    levels = c("Lt high school", "High school", "Junior college",
+               "Bachelor", "Graduate", "Not Applicable"))
+
+ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) +
+  geom_bar(position = "fill")
 
 ggplot(data = GSS) +
-   geom_mosaic(aes(x = product(Pol_Affl, Respondent_TopEdu), fill = Pol_Affl), na.rm=FALSE)
+   geom_mosaic(aes(x = product(Pol_Affl, Respondent_TopEdu), 
+                   fill = Pol_Affl), na.rm=FALSE)
 
-ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) + geom_bar(position = "fill") + facet_wrap(~Race)
+ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) +
+  geom_bar(position = "fill") + facet_wrap(~Race)
 ```
 
 4. Is there a relationship between happiness and number of children?  Does this conclusion hold true for both men and women?
 
+It appears that the number of children does correlate to a change in the respondents level of happiness.  It appears that as the number of children increases the extreme positions become more likely, either "very happy" or "not too happy."  This overall trend varies a little between the sexes.  AS women have more children then they are less likely to be very happy and more likely to be not too happy.  Men
+on the other hand appear to be more likely to be very happy as they have more children.  Whether these small differences are statistically significant should be further investigated before any conclusions are drawn though.
+
 ```{r}
-ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) + geom_bar(position = "fill")
+ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) + 
+  geom_bar(position = "fill")
 
 ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) +
-   facet_wrap(~Sex) +
+  facet_wrap(~Sex) +
   geom_bar(position = "fill")
 
 ```
