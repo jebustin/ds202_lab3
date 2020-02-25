@@ -1,6 +1,6 @@
 ---
 title: "ds202_lab3_team"
-author: 'Jessie Bustin Github: jebustin'
+author: 'Jessie Bustin Github: jebustin & Syed Hasan @github shasan2519'
 date: "2/19/2020"
 output: html_document
 ---
