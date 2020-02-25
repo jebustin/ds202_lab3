@@ -29,7 +29,7 @@ Data Cleaning:
 3.Dropped Na values for num col (Year and ID only)
 4.Dropped any rows containing "No answer" or "Don't know" or "Dk na".
 5.I didn't remove any "Not applicable" rows
-6.The NumOfChildren and YearHSCompleted columns were cast to numeric
+6.The YearHSCompleted column was cast to numeric
 ```{r}
 GSS = rename(df, "Year"='Gss year for this respondent',
              "Pol_Affl"="Political party affiliation",
@@ -46,19 +46,19 @@ GSS = rename(df, "Year"='Gss year for this respondent',
              "HappyIndex"="General happiness")
 GSS<-na.omit(GSS)
 GSS<-GSS[!(GSS$Pol_Affl=="No answer" | GSS$respondentSpouse_TopEdu=="No answer" | GSS$respondentSpouse_TopEdu=="Don't know" | GSS$Respondent_TopEdu=="No answer" | GSS$YearHSCompleted=="No answer"  | GSS$NumOfChildren=="Dk na" | GSS$WidowStatus=="No answer" | GSS$WidowStatus=="Don't know" | GSS$MaritalStatus=="No answer" | GSS$HoursWorked=="No answer" | GSS$HoursWorked=="Don't know" | GSS$HappyIndex=="No answer" | GSS$HappyIndex=="Not applicable"),]
-GSS = transform(GSS, NumOfChildren = as.numeric(NumOfChildren))
 GSS = transform(GSS, YearHSCompleted = as.numeric(YearHSCompleted))
 ```
 
 ## 1
 
 How does the happiness of a respondent relate to the marriage status?
-The bar plot below shows that people are genrally more happier while they're married. So are people who've ne'er married. But they're people who only are pretty happy not VERY happy, being divorced.
+
+The bar plot below shows that people are genrally more happy while they're married. So are people who've never married. But they are only pretty happy not VERY happy, being divorced.
 
 ```{r}
 Q1<-GSS %>%
   select(MaritalStatus, HappyIndex)
-ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar()
+ggplot(data=Q1,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill")
 ```
 
 
@@ -69,6 +69,8 @@ Does the sex of the respondent affect the relationship you found in Q1?
 ```{r}
  Q2<-GSS %>%
   select(MaritalStatus, HappyIndex, Sex)
+
+ggplot(data=Q2,aes(x=MaritalStatus,fill=HappyIndex))+geom_bar(position = "fill") + facet_wrap(~Sex)
 ```
 
 ## 3
@@ -76,23 +78,27 @@ Does the sex of the respondent affect the relationship you found in Q1?
 How does the happiness of a respondent relate to the political party affiliation?
 
 ```{r}
+GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat", "Not str democrat", "Ind,near dem", "Strong republican", "Not str republican", "Ind,near rep", "Independent", "Other party", "Don't know"))
 
+counts <- GSS %>% group_by(HappyIndex, Pol_Affl) %>% summarise(counts = n()) 
+
+ggplot(data = counts, aes(x = HappyIndex, y = counts, fill = Pol_Affl)) + geom_bar(stat = "identity", position = position_dodge())
+
+ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) + geom_bar(position = "fill")
 ```
 
 ## 4
 
 Raise four questions that can be answered by the GSS dataset. Extract appropriate data from the website, explore, and answer the questions.
 
-1. Does the number of children the respondent has vary with race?
+1. Does the number of children the respondent have vary with race?
 Does this relationship change over the years?
 
 ```{r}
+ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) + geom_bar(position = "fill")
 
-ggplot(GSS, aes(x = Race, y = NumOfChildren)) + geom_boxplot()
+ggplot(data = GSS, aes(x = Race, fill = NumOfChildren)) + geom_bar(position = "fill") + facet_wrap(~Year)
 
-ggplot(GSS, aes(x = Race, y = NumOfChildren)) +
-  facet_wrap(~Year) +
-  geom_boxplot()
 ```
 
 2. Does the respondents spouse's highest degree affect the years of
@@ -109,20 +115,26 @@ ggplot(GSS, aes(x = respondentSpouse_TopEdu, y = YearHSCompleted)) +
 ```
 
 3. Does the distribution between political parties change based on
-the highest degree of the respondent?
+the highest degree of the respondent? Does this relationship change between races?
 
 ```{r}
 GSS$Respondent_TopEdu <- factor(GSS$Respondent_TopEdu, levels = c("Lt high school", "High school", "Junior college", "Bachelor", "Graduate", "Not Applicable"))
-GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat", "Not str democrat", "Ind,near dem", "Strong republican", "Not str republican", "Ind,near rep", "Independent", "Other party", "Don't know"))
+
+ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) + geom_bar(position = "fill")
 
 ggplot(data = GSS) +
    geom_mosaic(aes(x = product(Pol_Affl, Respondent_TopEdu), fill = Pol_Affl), na.rm=FALSE)
+
+ggplot(data = GSS, aes(x = Respondent_TopEdu, fill = Pol_Affl)) + geom_bar(position = "fill") + facet_wrap(~Race)
 ```
 
-4. Is there a relationship between happiness and number of hours
-usually worked in a week?  Does this conclusion hold true for both
-men and women?
+4. Is there a relationship between happiness and number of children?  Does this conclusion hold true for both men and women?
 
 ```{r}
-ggplot(data = GSS, aes(x = HappyIndex, y = HoursWorked))
+ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) + geom_bar(position = "fill")
+
+ggplot(data = GSS, aes(x = NumOfChildren, fill = HappyIndex)) +
+   facet_wrap(~Sex) +
+  geom_bar(position = "fill")
+
 ```
