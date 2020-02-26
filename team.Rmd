@@ -1,7 +1,12 @@
 ---
 title: "ds202_lab3_team"
+<<<<<<< HEAD
 author: 'Jessie Bustin Github: jebustin'
 date: "2/25/2020"
+=======
+author: 'Jessie Bustin Github: jebustin & Syed Hasan @github shasan2519'
+date: "2/19/2020"
+>>>>>>> 3602c176bb00540bf83d57305715fd38b61b4f7b
 output: html_document
 ---
 
