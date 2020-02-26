@@ -1,7 +1,7 @@
 ---
 title: "ds202_lab3_team"
 author: 'Jessie Bustin Github: jebustin'
-date: "2/19/2020"
+date: "2/25/2020"
 output: html_document
 ---
 
@@ -95,11 +95,9 @@ ggplot(data = Q2, aes(x = MaritalStatus, fill = HappyIndex)) +
 
 How does the happiness of a respondent relate to the political party affiliation?
 
-People who are the most happy are “not strong democrats” and “not strong republicans”.
+Strong republicans are more likely to be very happy than the other party affiliations.  They are also less likely to be not very happy.  For all party affiliations it is most likely that the respondent is pretty happy, and least likely to be not too happy.  Whether the small differences in proportions of the happiness levels between the parties are significant would require further modeling and hypothesis testing.
 
-But interestingly, some of the people who consider themselves as “not strong democrats” aren’t very happy but the  same can’t be said for the republican supporter.
-
-People who are clueless about their happiness are mostly independent party supporters.
+It was decided that the happiness levels would not be converted to numeric options because that would impose value judgements on the differences between the happiness levels.  Is the difference between not too happy and pretty happy the same as from pretty happy to very happy?  Numerical coding for this categorical variable is possible but any numerical analysis on the coding would be unjust.
 
 
 ```{r}
@@ -111,17 +109,17 @@ GSS$Pol_Affl <- factor(GSS$Pol_Affl, levels = c("Strong democrat",
 counts <- GSS %>% group_by(HappyIndex, Pol_Affl) %>% 
           summarise(counts = n()) 
 
-ggplot(data = counts, aes(x = HappyIndex, y = counts, 
-                          fill = Pol_Affl)) + 
+ggplot(data = counts, aes(x = Pol_Affl, y = counts, 
+                          fill = HappyIndex)) + 
   geom_bar(stat = "identity", position = position_dodge()) +
-  ggtitle("Political Party by Happiness Level") + 
-  xlab("Happiness Level") + 
+  ggtitle("Happiness Level by Political Party") + 
+  xlab("Political Party") + 
   ylab("Count")
 
-ggplot(data = GSS, aes(x = HappyIndex, fill = Pol_Affl)) +
+ggplot(data = GSS, aes(x = Pol_Affl, fill = HappyIndex)) +
   geom_bar(position = "fill") + 
-  ggtitle("Political Party by Happiness Level") + 
-  xlab("Happiness Level") + ylab("Proportion")
+  ggtitle("Happiness Level by Political Party") + 
+  xlab("Political Party") + ylab("Proportion")
 
 ```
 
